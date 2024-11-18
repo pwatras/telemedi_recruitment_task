@@ -8,6 +8,14 @@ setupcheck:
     path: /api/setup-check
     controller: App\Controller\DefaultController::setupCheck
 
+rates:
+    path: /api/rates/{date}
+    controller: App\Controller\ExchangeRatesController::getRates
+    defaults:
+        date: 'today'
+    requirements:
+        date: '(today)|(\d{4}-\d{2}-\d{2})'
+
 index:
     path: /{wildcard}
     defaults: {

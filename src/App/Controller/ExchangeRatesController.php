@@ -7,7 +7,9 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Exception\UnexpectedValueException;
 use App\Helper\TransactionRatesHelper;
+
 
 class ExchangeRatesController extends AbstractController
 {
@@ -18,7 +20,12 @@ class ExchangeRatesController extends AbstractController
     }
 
     public function getRates(Request $req, $date):Response {
-        $rates = $this->helper->getRates($date==='today'?date('Y-m-d'):$date);
+        $parsedDate = date_parse($date);
+        if($parsedDate['year']<2023) {
+            return new Response('',Response::HTTP_FORBIDDEN);
+        }
+
+        $rates = $this->helper->getRates($date);
         return new Response(
                     json_encode($rates),
                     Response::HTTP_OK,
